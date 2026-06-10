@@ -1,14 +1,14 @@
 class CheckoutPage {
 
-    get firstNameInput() {
+    get firstName() {
         return $('#first-name');
     }
 
-    get lastNameInput() {
+    get lastName() {
         return $('#last-name');
     }
 
-    get postalCodeInput() {
+    get postalCode() {
         return $('#postal-code');
     }
 
@@ -16,14 +16,26 @@ class CheckoutPage {
         return $('#continue');
     }
 
-    async fillCheckoutInfo(firstName, lastName, postalCode) {
-        await this.firstNameInput.setValue(firstName);
-        await this.lastNameInput.setValue(lastName);
-        await this.postalCodeInput.setValue(postalCode);
+    get finishButton() {
+        return $('#finish');
     }
 
-    async continueCheckout() {
-        await this.continueButton.click();
+    get summaryContainer() {
+        return $('.checkout_summary_container');
+    }
+
+    get successMessage() {
+        return $('.complete-header');
+    }
+
+    get backToProducts() {
+        return $('#back-to-products');
+    }
+
+    async fillInfo(first, last, zip) {
+        await this.firstName.setValue(first);
+        await this.lastName.setValue(last);
+        await this.postalCode.setValue(zip);
     }
 }
 
