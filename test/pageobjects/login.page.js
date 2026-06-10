@@ -16,10 +16,6 @@ class LoginPage {
         return $('h3[data-test="error"]');
     }
 
-    get errorButton() {
-        return $('.error-button');
-    }
-
     async open() {
         await browser.url('https://www.saucedemo.com/');
     }
