@@ -1,11 +1,19 @@
 import LoginPage from '../pageobjects/login.page.js';
 
-await LoginPage.open();
+describe('Login with invalid password', () => {
 
-await LoginPage.login(
-    'standard_user',
-    'wrong_password'
-);
+    it('TC-2: should show error with invalid password', async () => {
 
-await expect(LoginPage.errorMessage)
-    .toBeDisplayed();
+        await LoginPage.open();
+
+        await LoginPage.login(
+            'standard_user',
+            'wrong_password'
+        );
+
+        await expect(LoginPage.errorMessage)
+            .toBeDisplayed();
+
+    });
+
+});
