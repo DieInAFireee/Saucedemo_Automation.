@@ -1,37 +1,34 @@
+import LoginPage from '../pageobjects/login.page.js';
+import InventoryPage from '../pageobjects/inventory.page.js';
+import FooterPage from '../pageobjects/footer.page.js';
+
 describe('Footer social links', () => {
 
     it('TC-7: footer links open in new tabs', async () => {
 
-        await browser.url('https://www.saucedemo.com/');
+        await LoginPage.open();
+        await LoginPage.login('standard_user', 'secret_sauce');
 
-        await $('#user-name').setValue('standard_user');
-        await $('#password').setValue('secret_sauce');
-        await $('#login-button').click();
+        await expect(InventoryPage.inventoryList).toBeDisplayed();
 
-        await $('.inventory_list').waitForDisplayed();
-        const twitter = $('a[href*="twitter"]');
-        await twitter.scrollIntoView();
-        await twitter.waitForClickable();
-        await twitter.click();
+        // TWITTER / X
+        await FooterPage.openTwitter();
 
-        let handles = await browser.getWindowHandles();
-        await browser.switchToWindow(handles[1]);
+        let handles = await FooterPage.switchToNewTab();
 
-        await expect(browser).toHaveUrl(expect.stringContaining('x.com'));
+        await expect(browser)
+            .toHaveUrl(expect.stringContaining('x.com'));
 
         await browser.closeWindow();
-        await browser.switchToWindow(handles[0]);
+        await FooterPage.switchBack(handles);
 
-        const facebook = $('a[href*="facebook"]');
-        await facebook.scrollIntoView();
-        await facebook.waitForClickable();
-        await facebook.click();
+        // FACEBOOK
+        await FooterPage.openFacebook();
 
-        handles = await browser.getWindowHandles();
-        await browser.switchToWindow(handles[1]);
+        handles = await FooterPage.switchToNewTab();
 
-        await expect(browser).toHaveUrl(expect.stringContaining('facebook'));
-
+        await expect(browser)
+            .toHaveUrl(expect.stringContaining('facebook'));
     });
 
 });

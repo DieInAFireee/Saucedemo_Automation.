@@ -1,49 +1,44 @@
+import LoginPage from '../pageobjects/login.page.js';
+import InventoryPage from '../pageobjects/inventory.page.js';
+
 describe('Product sorting', () => {
 
     it('TC-6: sorting options work correctly', async () => {
 
-        await browser.url('https://www.saucedemo.com/');
-        await $('#user-name').setValue('standard_user');
-        await $('#password').setValue('secret_sauce');
-        await $('#login-button').click();
+        await LoginPage.open();
+        await LoginPage.login('standard_user', 'secret_sauce');
 
-        await expect($('.inventory_list')).toBeDisplayed();
+        await expect(InventoryPage.inventoryList).toBeDisplayed();
 
-        const sortSelect = $('.product_sort_container');
 
-        await sortSelect.selectByVisibleText('Name (A to Z)');
+        await InventoryPage.sortBy('Name (A to Z)');
 
-        let namesAZ = await $$('.inventory_item_name').map(el => el.getText());
+        let namesAZ = await InventoryPage.getNamesText();
         let sortedAZ = [...namesAZ].sort();
 
         await expect(namesAZ).toEqual(sortedAZ);
-        await sortSelect.selectByVisibleText('Name (Z to A)');
 
-        let namesZA = await $$('.inventory_item_name').map(el => el.getText());
+    
+        await InventoryPage.sortBy('Name (Z to A)');
+
+        let namesZA = await InventoryPage.getNamesText();
         let sortedZA = [...namesAZ].sort().reverse();
 
         await expect(namesZA).toEqual(sortedZA);
-        await sortSelect.selectByVisibleText('Price (low to high)');
 
-        let pricesLow = await $$('.inventory_item_price').map(async el =>
-            parseFloat((await el.getText()).replace('$', ''))
-        );
+        await InventoryPage.sortBy('Price (low to high)');
 
-        pricesLow = await Promise.all(pricesLow);
+        let pricesLow = await InventoryPage.getPricesNumbers();
         let sortedLow = [...pricesLow].sort((a, b) => a - b);
 
         await expect(pricesLow).toEqual(sortedLow);
-        await sortSelect.selectByVisibleText('Price (high to low)');
 
-        let pricesHigh = await $$('.inventory_item_price').map(async el =>
-            parseFloat((await el.getText()).replace('$', ''))
-        );
+        await InventoryPage.sortBy('Price (high to low)');
 
-        pricesHigh = await Promise.all(pricesHigh);
-        let sortedHigh = [...pricesLow].sort((a, b) => b - a);
+        let pricesHigh = await InventoryPage.getPricesNumbers();
+        let sortedHigh = [...pricesHigh].sort((a, b) => b - a);
 
         await expect(pricesHigh).toEqual(sortedHigh);
-
     });
 
 });

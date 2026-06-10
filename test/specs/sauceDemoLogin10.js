@@ -1,41 +1,29 @@
+import LoginPage from '../pageobjects/login.page.js';
+import InventoryPage from '../pageobjects/inventory.page.js';
 
 describe('Product sorting remains correct after page refresh', () => {
-    it('TC-11: sorting should remain after page refresh', async () => {
 
-    
-        await browser.url('https://www.saucedemo.com/')
-        await $('#user-name').setValue('standard_user')
-        await $('#password').setValue('secret_sauce')
-        await $('#login-button').click()
+    it('TC-10: sorting should remain after page refresh', async () => {
 
-        const sortDropdown = await $('.product_sort_container')
-        await sortDropdown.selectByVisibleText('Price (low to high)')
-        const priceElementsBefore = await $$('.inventory_item_price')
+        await LoginPage.open();
+        await LoginPage.login('standard_user', 'secret_sauce');
 
-        const pricesBefore = []
+        await InventoryPage.sortBy('Price (low to high)');
 
-        for (const price of priceElementsBefore) {
-            const text = await price.getText()
-            pricesBefore.push(parseFloat(text.replace('$', '')))
-        }
-        await browser.refresh()
+        const pricesBefore = await InventoryPage.getPrices();
 
-        const selectedOption = await sortDropdown.getValue()
-        expect(selectedOption).toBe('lohi')
+        await browser.refresh();
 
-        const priceElementsAfter = await $$('.inventory_item_price')
+        const selectedOption = await InventoryPage.getSelectedSortValue();
+        expect(selectedOption).toBe('lohi');
 
-        const pricesAfter = []
+        const pricesAfter = await InventoryPage.getPrices();
 
-        for (const price of priceElementsAfter) {
-            const text = await price.getText()
-            pricesAfter.push(parseFloat(text.replace('$', '')))
-        }
+        expect(pricesAfter).toEqual(pricesBefore);
 
-        expect(pricesAfter).toEqual(pricesBefore)
+        const sortedPrices = [...pricesAfter].sort((a, b) => a - b);
 
-        const sortedPrices = [...pricesAfter].sort((a, b) => a - b)
+        expect(pricesAfter).toEqual(sortedPrices);
+    });
 
-        expect(pricesAfter).toEqual(sortedPrices)
-    })
-})
+});

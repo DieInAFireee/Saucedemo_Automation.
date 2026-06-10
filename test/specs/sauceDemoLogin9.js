@@ -1,25 +1,31 @@
+import LoginPage from '../pageobjects/login.page.js';
+import InventoryPage from '../pageobjects/inventory.page.js';
+import CartPage from '../pageobjects/cart.page.js';
+import CheckoutPage from '../pageobjects/checkout.page.js';
+
 describe('Checkout without products', () => {
 
     it('TC-9: user cannot checkout with empty cart', async () => {
 
-        await browser.url('https://www.saucedemo.com/');
-        await $('#user-name').setValue('standard_user');
-        await $('#password').setValue('secret_sauce');
-        await $('#login-button').click();
-        await expect($('.inventory_list')).toBeDisplayed();
-        await $('.shopping_cart_link').click();
-        await expect($('.cart_list')).toBeDisplayed();
-      
-        const cartItems = await $$('.cart_item');
-        await expect(cartItems.length).toBe(0);
+        await LoginPage.open();
+        await LoginPage.login('standard_user', 'secret_sauce');
 
-        const checkoutBtn = await $('#checkout');
-        await checkoutBtn.click();
-        await expect(browser).toHaveUrl(expect.stringContaining('checkout'));
-    
-        const firstNameField = await $('#first-name');
-        await expect(firstNameField).toBeDisplayed();
+        await expect(InventoryPage.inventoryList).toBeDisplayed();
 
+        await InventoryPage.cartLink.click();
+        await expect(CartPage.cartList).toBeDisplayed();
+
+        // 🔍 перевірка що кошик порожній
+        await expect(await CartPage.cartItems.length).toBe(0);
+
+        // 👉 checkout все одно доступний
+        await CartPage.checkoutButton.click();
+
+        await expect(browser)
+            .toHaveUrl(expect.stringContaining('checkout'));
+
+        await expect(CheckoutPage.firstName)
+            .toBeDisplayed();
     });
 
 });
