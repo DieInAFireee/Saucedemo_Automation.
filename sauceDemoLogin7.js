@@ -8,12 +8,7 @@ describe('Footer social links', () => {
         await $('#password').setValue('secret_sauce');
         await $('#login-button').click();
 
-        // ✅ IMPORTANT: wait page fully loaded
         await $('.inventory_list').waitForDisplayed();
-
-        // ======================
-        // TWITTER
-        // ======================
         const twitter = $('a[href*="twitter"]');
         await twitter.scrollIntoView();
         await twitter.waitForClickable();
@@ -27,9 +22,6 @@ describe('Footer social links', () => {
         await browser.closeWindow();
         await browser.switchToWindow(handles[0]);
 
-        // ======================
-        // FACEBOOK
-        // ======================
         const facebook = $('a[href*="facebook"]');
         await facebook.scrollIntoView();
         await facebook.waitForClickable();
