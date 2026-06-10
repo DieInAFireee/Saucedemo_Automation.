@@ -1,19 +1,25 @@
 class InventoryPage {
 
-    get pageTitle() {
-        return $('.title');
+    get inventoryList() {
+        return $('.inventory_list');
     }
 
-    get firstAddToCartButton() {
-        return $('button[data-test^="add-to-cart"]');
+    get burgerMenuButton() {
+        return $('#react-burger-menu-btn');
     }
 
-    get shoppingCartBadge() {
-        return $('.shopping_cart_badge');
+    get menuWrap() {
+        return $('.bm-menu-wrap');
     }
 
-    async addFirstProductToCart() {
-        await this.firstAddToCartButton.click();
+    get logoutButton() {
+        return $('#logout_sidebar_link');
+    }
+
+    async logout() {
+        await this.burgerMenuButton.click();
+        await this.menuWrap.waitForDisplayed();
+        await this.logoutButton.click();
     }
 }
 
