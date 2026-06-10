@@ -1,14 +1,19 @@
-import { expect } from '@wdio/globals'
+import LoginPage from '../pageobjects/login.page.js';
 
-describe('login test', () => {
-    it('should login', async () => {
-        await browser.url('https://the-internet.herokuapp.com/login')
+describe('Login test', () => {
 
-        await $('#username').setValue('tomsmith')
-        await $('#password').setValue('SuperSecretPassword!')
-        await $('button[type="submit"]').click()
+    it('TC-1', async () => {
 
-        const flash = await $('#flash').getText()
-        expect(flash).toContain('You logged into a secure area!')
-    })
-})
+        await LoginPage.open();
+
+        await LoginPage.login(
+            'standard_user',
+            'secret_sauce'
+        );
+
+        await expect(browser)
+            .toHaveUrlContaining('inventory.html');
+
+    });
+
+});
