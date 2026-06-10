@@ -1,16 +1,19 @@
+import LoginPage from '../pageobjects/login.page.js';
+
 describe('Login with locked out user', () => {
 
     it('TC-3: should block locked out user', async () => {
 
-        await browser.url('https://www.saucedemo.com/');
+        await LoginPage.open();
 
-        await $('#user-name').setValue('locked_out_user');
-        await $('#password').setValue('secret_sauce');
-        await $('#login-button').click();
+        await LoginPage.login(
+            'locked_out_user',
+            'secret_sauce'
+        );
 
-        await expect($('.error-button')).toBeDisplayed();
+        await expect(LoginPage.errorButton).toBeDisplayed();
 
-        await expect($('h3[data-test="error"]'))
+        await expect(LoginPage.errorMessage)
             .toHaveTextContaining('locked out');
     });
 
